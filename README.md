@@ -1,2 +1,2 @@
-# python-learning
-Some logic exercices solved with Python 3
+# Python Learning
+A bunch of logic exercices solved with **Python 3**.
