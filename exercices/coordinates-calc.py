@@ -6,18 +6,16 @@ class Line:
         self.point2 = point2
 
         # Get X and Y axis
-        self.axis_x1 = self.point1[0]
-        self.axis_y1 = self.point1[1]
-        self.axis_x2 = self.point2[0]
-        self.axis_y2 = self.point2[1]
+        self.x1, self.y1 = self.point1
+        self.x2, self.y2 = self.point2
 
     def get_distance(self):
-        distance = math.sqrt((self.axis_x2 - self.axis_x1) ** 2 + (self.axis_y2 - self.axis_y1) ** 2)
+        distance = math.sqrt((self.x2 - self.x1) ** 2 + (self.y2 - self.y1) ** 2)
 
         return distance
 
     def get_slope(self):
-        slope = (self.axis_y2 - self.axis_y1) / (self.axis_x2 - self.axis_x1)
+        slope = (self.y2 - self.y1) / (self.x2 - self.x1)
 
         return slope
 
