@@ -1,6 +1,6 @@
 import math
 
-class Cylinder:
+class Cylinder():
 
     pi = math.pi
 
