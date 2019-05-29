@@ -164,8 +164,13 @@ def dealer_won(player, dealer, chips):
     chips.bet_won()
 def push(player, dealer):
     print("\nGame Tied!")
-def check_winner(player, dealer, chips):
+def check_winner(hand_player, hand_dealer, player_chips):
     print("Check winner!")
+    show_table(hand_player, hand_dealer)
+    print(f"Player: {hand_player.value}")
+    print(f"Dealer: {hand_dealer.value}")
+    print(f"Chips Bet: {player_chips.bet}")
+    print(f"Chips Total: {player_chips.total}")
     # if hand_dealer.value > 21:
     #     dealer_lost(hand_player, hand_dealer, player_chips)
     # elif hand_dealer.value > hand_player.value:
@@ -201,7 +206,7 @@ while True:
     take_bet(player_chips)
     show_player_cards(hand_player)
 
-    # Keep asking if the player wants to hit, until he stants or lose
+    # Keep asking if the player wants to hit, until he stands or loses
     while is_user_hitting:
         hit_or_stand(deck, hand_player)
 
@@ -210,22 +215,16 @@ while True:
             is_dealer_hitting = False
             break
 
-    # Print that it's dealer's turn
-    # print(is_dealer_hitting)
-
-    # Keep dealer hitting until it's hand is under 17
+    # Keep dealer hitting until it's hand's value is under 17
     while is_dealer_hitting:
-        print("Dealer's turn!")
+        print("\nDealer's turn!")
 
         while hand_dealer.value < 17:
             print("Dealer hits.")
             hit(deck, hand_dealer)
 
+        print("Dealer stands.")
         is_dealer_hitting = False
-
-    # Show table, as player and dealer are not hitting anymore
-    # show_table(hand_player, hand_dealer)
-    # print(is_dealer_hitting)
 
     # Check for a winner or if the game was tied
     check_winner(hand_player, hand_dealer, player_chips)
@@ -243,6 +242,7 @@ while True:
 
         if play_again[0] == 'Y':
             is_user_hitting = True
+            is_dealer_hitting = True
             continue
         else:
             print("\nThanks for playing!")
