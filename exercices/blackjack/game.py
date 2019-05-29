@@ -35,7 +35,8 @@ values = {
     'Q': 10,
     'K': 10,
     'A': 11}
-is_user_hitting = True;
+is_user_hitting = True
+is_dealer_hitting = True
 
 # Classes
 class Card():
@@ -110,7 +111,7 @@ def take_bet(chips):
 def hit(deck, hand):
     hand.add_card(deck.deal())
     hand.aces_adjustment()
-def hit_or_stand(deck, hand):
+def hit_or_stand(deck, hand_player):
     global is_user_hitting
 
     player_move = ''
@@ -120,29 +121,37 @@ def hit_or_stand(deck, hand):
     while True:
         if player_move[0].upper() == 'H':
             print("\nPlayer hits.")
-            hit(deck, hand)
+            hit(deck, hand_player)
+            show_player_cards(hand_player)
         elif player_move[0].upper() == 'S':
             print("\nPlayer stands.")
             is_user_hitting = False
         break
-def show_cards(player, dealer):
-    print("\nPlayer's hand:")
+def show_player_cards(hand_player):
+    print("\nPLAYER'S HAND")
+    print("-------------")
+
+    for card in hand_player.cards:
+        print(card)
+
+    print("-------------\n")
+def show_table(player, dealer):
+    print("\nPLAYER'S HAND")
+    print("-------------")
+
     for card in player.cards:
         print(card)
 
-    print("\nDealer's hand:")
-    print("One card hidden!")
-    print(f"{dealer.cards[1]}\n")
-def show_all_cards(player, dealer):
-    print("\nPlayer's hand:")
-    for card in player.cards:
-        print(card)
+    print("-------------")
+    print("\nDEALER'S HAND")
+    print("-------------")
 
-    print("\nDealer's hand:")
     for card in dealer.cards:
         print(card)
+
+    print("-------------\n")
 def player_lost(player, dealer, chips):
-    print("Player Lost!")
+    print("Player lost!")
     chips.bet_lost()
 def player_won(player, dealer, chips):
     print("\nPlayer Won!")
@@ -155,9 +164,19 @@ def dealer_won(player, dealer, chips):
     chips.bet_won()
 def push(player, dealer):
     print("\nGame Tied!")
+def check_winner(player, dealer, chips):
+    print("Check winner!")
+    # if hand_dealer.value > 21:
+    #     dealer_lost(hand_player, hand_dealer, player_chips)
+    # elif hand_dealer.value > hand_player.value:
+    #     dealer_won(hand_player, hand_dealer, player_chips)
+    # elif hand_dealer.value < hand_player.value:
+    #     player_won(hand_player, hand_dealer, player_chips)
+    # else:
+    #     push(hand_player, hand_dealer)
 
 # Give player chips
-chips_player = Chips()
+player_chips = Chips()
 
 # Start the game
 while True:
@@ -179,22 +198,42 @@ while True:
     hand_dealer.add_card(deck.deal())
 
     # Take player's bet and show the cards
-    take_bet(chips_player)
-    show_cards(hand_player, hand_dealer)
+    take_bet(player_chips)
+    show_player_cards(hand_player)
 
-    # While player is hitting, add cards to his hand and shows the table
+    # Keep asking if the player wants to hit, until he stants or lose
     while is_user_hitting:
         hit_or_stand(deck, hand_player)
-        show_cards(hand_player, hand_dealer)
 
         if hand_player.value > 21:
-            player_lost(hand_player, hand_dealer, chips_player)
+            # player_lost(hand_player, hand_dealer, player_chips)
+            is_dealer_hitting = False
             break
 
-    print(f"Player's chips: {chips_player.total}\n")
+    # Print that it's dealer's turn
+    # print(is_dealer_hitting)
+
+    # Keep dealer hitting until it's hand is under 17
+    while is_dealer_hitting:
+        print("Dealer's turn!")
+
+        while hand_dealer.value < 17:
+            print("Dealer hits.")
+            hit(deck, hand_dealer)
+
+        is_dealer_hitting = False
+
+    # Show table, as player and dealer are not hitting anymore
+    # show_table(hand_player, hand_dealer)
+    # print(is_dealer_hitting)
+
+    # Check for a winner or if the game was tied
+    check_winner(hand_player, hand_dealer, player_chips)
+
+    # print(f"Player's chips: {player_chips.total}\n")
 
     # Check if the player have enough chips and wants to play again
-    if chips_player.total == 0:
+    if player_chips.total == 0:
         print("You lost all your chips! Thanks for playing!")
         break
     else:
@@ -203,6 +242,7 @@ while True:
             play_again = input("Would you like to play again (Y/N)? ").upper()
 
         if play_again[0] == 'Y':
+            is_user_hitting = True
             continue
         else:
             print("\nThanks for playing!")
