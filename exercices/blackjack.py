@@ -135,50 +135,45 @@ def show_player_cards(hand_player):
         print(card)
 
     print("-------------\n")
-def show_table(player, dealer):
+def show_table(hand_player, hand_dealer):
     print("\nPLAYER'S HAND")
     print("-------------")
 
-    for card in player.cards:
+    for card in hand_player.cards:
         print(card)
 
     print("-------------")
     print("\nDEALER'S HAND")
     print("-------------")
 
-    for card in dealer.cards:
+    for card in hand_dealer.cards:
         print(card)
 
     print("-------------\n")
-def player_lost(player, dealer, chips):
-    print("Player lost!")
-    chips.bet_lost()
-def player_won(player, dealer, chips):
-    print("\nPlayer Won!")
-    chips.bet_won()
-def dealer_lost(player, dealer, chips):
-    print("\nDealer Lost!")
-    chips.bet_lost()
-def dealer_won(player, dealer, chips):
-    print("\nDealer Won!")
-    chips.bet_won()
-def push(player, dealer):
-    print("\nGame Tied!")
 def check_winner(hand_player, hand_dealer, player_chips):
-    print("Check winner!")
+    print("\nGame results:")
     show_table(hand_player, hand_dealer)
-    print(f"Player: {hand_player.value}")
-    print(f"Dealer: {hand_dealer.value}")
-    print(f"Chips Bet: {player_chips.bet}")
-    print(f"Chips Total: {player_chips.total}")
-    # if hand_dealer.value > 21:
-    #     dealer_lost(hand_player, hand_dealer, player_chips)
-    # elif hand_dealer.value > hand_player.value:
-    #     dealer_won(hand_player, hand_dealer, player_chips)
-    # elif hand_dealer.value < hand_player.value:
-    #     player_won(hand_player, hand_dealer, player_chips)
-    # else:
-    #     push(hand_player, hand_dealer)
+
+    print(f"Player's hand value: {hand_player.value}")
+    print(f"Dealer's hand value: {hand_dealer.value}")
+    print(f"Bet: {player_chips.bet} chips")
+
+    if hand_player.value > 21:
+        print("\nDealer won!")
+        player_chips.bet_lost()
+    elif hand_dealer.value > 21:
+        print("\nPlayer won!")
+        player_chips.bet_won()
+    elif hand_player.value > hand_dealer.value:
+        print("\nPlayer won!")
+        player_chips.bet_won()
+    elif hand_dealer.value > hand_player.value:
+        print("\nDealer won!")
+        player_chips.bet_lost()
+    elif hand_player.value == hand_dealer.value:
+        print("\nGame tied!")
+    else:
+        print("\nWhoops, something went wrong!")
 
 # Give player chips
 player_chips = Chips()
@@ -211,7 +206,7 @@ while True:
         hit_or_stand(deck, hand_player)
 
         if hand_player.value > 21:
-            # player_lost(hand_player, hand_dealer, player_chips)
+            print("Hmmm, I think you got busted...")
             is_dealer_hitting = False
             break
 
@@ -229,7 +224,8 @@ while True:
     # Check for a winner or if the game was tied
     check_winner(hand_player, hand_dealer, player_chips)
 
-    # print(f"Player's chips: {player_chips.total}\n")
+    # Print player's chips after the game
+    print(f"\nPlayer's chips: {player_chips.total}\n")
 
     # Check if the player have enough chips and wants to play again
     if player_chips.total == 0:
